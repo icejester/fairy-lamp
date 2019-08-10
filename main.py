@@ -36,6 +36,11 @@ NEARBLACK = (18, 0, 30)
 LOWWHITE = (4, 4, 4)
 PINK = (255, 51,153)
 
+# Lighting mode
+# 0 = "Magic pulsing mode"
+# 1 = "Desk lamp mode"
+LAMPMODE = 0 
+
 # COLOR PALLETS
 LIGHTNING = [WHITE, CYAN, SKYBLUE, BLUE, PURPLE]
 FIRE = [RED, YELLOW, GREEN, ORANGE]
@@ -82,42 +87,51 @@ def multiPalletBurst(aPixel, aPallet):
         time.sleep(burstDuration/numColors)
  
 while True:
-    aPixel = pixels[0]
-    rCur = aPixel[0]
-    gCur = aPixel[1]
-    bCur = aPixel[2]
-    
-    # print("rCur: ", rCur)
-    # print("gCur: ", gCur)
-    # print("bCur: ", bCur)
     
     if touch.value:
         for i in range(random.randrange(20, 40)):
             aStrike = random.randrange(7)
             multiPalletBurst(aStrike, PINKISH)
         
-    if (rCur <= 18 or bCur <= 30):
-        for i in range(0, 7):
-            pixels[i] = NEARBLACK
-        DIRECTION = 0
-        # print("GOING UP")
-    
-    if (rCur >= 180 or bCur >= 255):
-        for i in range(0, 7):
-            pixels[i] = PURPLE
-        DIRECTION = 1
-        # print("GOING DOWN")
-    
-    if DIRECTION == 1:
-        # for i in range(0, 7):
-        #     pixels[i] = ((rCur - rStep),(gCur - gStep),(bCur - bStep))
-        pixels.fill(((rCur - rStep),(gCur - gStep),(bCur - bStep)))
-        pixels.show()
-
-    if DIRECTION == 0:
-        # for i in range(0, 7):
-        #     pixels[i] = ((rCur + rStep),(gCur + gStep),(bCur + bStep))
-        pixels.fill(((rCur + rStep),(gCur + gStep),(bCur + bStep)))
-        pixels.show()
+        if LAMPMODE == 0:
+            LAMPMODE = 1
+            pixels.fill(WHITE)
+            pixels.brightness = 1
+            print("Hit lamp mode check of zero")
+        elif LAMPMODE == 1:
+            LAMPMODE = 0
+            pixels.fill(PURPLE)
+            pixels.brightness = .2
+            print("Hit lamp mode check of one")
         
-    #time.sleep(.1)
+        print(LAMPMODE)
+        
+
+    if LAMPMODE == 0:
+        aPixel = pixels[0]
+        rCur = aPixel[0]
+        gCur = aPixel[1]
+        bCur = aPixel[2]
+
+        if (rCur <= 18 or bCur <= 30):
+            for i in range(0, 7):
+                pixels[i] = NEARBLACK
+            DIRECTION = 0
+            # print("GOING UP")
+    
+        if (rCur >= 180 or bCur >= 255):
+            for i in range(0, 7):
+                pixels[i] = PURPLE
+            DIRECTION = 1
+            # print("GOING DOWN")
+    
+        if DIRECTION == 1:
+            pixels.fill(((rCur - rStep),(gCur - gStep),(bCur - bStep)))
+            pixels.show()
+
+        if DIRECTION == 0:
+            pixels.fill(((rCur + rStep),(gCur + gStep),(bCur + bStep)))
+            pixels.show()
+
+    if LAMPMODE == 1:
+        pixels.show
